@@ -1,68 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-
-</head>
-
-<body>
-    <h1>hello world</h1>
-    <div></div>
-    <img src="https://ts1.cn.mm.bing.net/th/id/R-C.31df3a5a2d8462228734f95d459883e2?rik=7EE6TeWDk%2f%2bctQ&amp;riu=http%3a%2f%2fwww.quazero.com%2fuploads%2fallimg%2f140303%2f1-140303214331.jpg&amp;ehk=SpI7mz%2byLqOkT8BL79jcd3iCtQYNFlBHQzbtF1p0vuQ%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0"
-        alt="">
-    <input type="text">
-
-    <div class="todo-app">
-        <div class="title">xxx的Todo App</div>
-        <div class="todo-from">
-            <input class="todo-input" type="text" placeholder="add a todo"></input>
-            <div class="todo-button">add todo</div>
-        </div>
-
-        <div class="item completed">
-            <div>
-                <input type="checkbox">
-                <span class="name">吃饭</span><!-- div默认竖着排，span横着排 -->
-                <!-- 这里ctrl+/是注释快捷键 -->
-                
-            </div>
-            <div class="del">del</div>
-        </div>
-
-        <div class="item">
-            <div>
-                <input type="checkbox">
-                <span class="name">吃饭</span>
-            </div>
-            <div class="del">del</div>
-        </div>
-
-        <div class="item">
-            <div>
-                <input type="checkbox">
-                <span class="name">吃饭</span>
-            </div>
-            <div class="del">del</div>
-        </div>
-
-    </div>
-    
-
-    <div class="box"></div>
-    <div class="box1"></div>
-    <div class="box"></div>
-
+    <title>Vue Todo App</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <style>
-
-
         body {
             margin: 0;
             height: 100%;
             background: linear-gradient(135deg, #000000, #333333, #666666, #999999, #cccccc, #ffffff);
+            background-attachment: fixed;/* 这可以防止背景在滚动时出现断层现象 */
+            
         }
 
         .todo-app {
@@ -70,15 +19,10 @@
             height: 500px;
             background-color: #ffffff;
             border-radius: 5px;
-            /* 添加圆角 */
             margin: 0 auto;
-            /* 水平居中 */
             margin-top: 40px;
             padding-top: 1px;
-            /* 添加微小的内边距防止 Margin 塌陷 */
             box-sizing: border-box;
-            /* 让内边距和边框不会撑开盒子的大小 */
-            ;
         }
 
         .title {
@@ -88,12 +32,11 @@
             margin-top: 40px;
         }
 
-        .todo-from {
+        .todo-form {
             display: flex;
             margin-top: 20px;
             margin-left: 30px;
         }
-
 
         .todo-input {
             padding-left: 15px;
@@ -103,7 +46,6 @@
             width: 60%;
             border-radius: 20px 0 0 20px;
             margin-bottom: 20px;
-
         }
 
         .todo-button {
@@ -115,76 +57,82 @@
             font-weight: 700;
             border: none;
             border-radius: 0 20px 20px 0;
-            background:linear-gradient(
-                to right,
-                rgb(113,65,163),
-                rgba(44,114,251,1)
-
-            );
-
-            color:#ffffff;
-            line-height: 52px;
+            background: linear-gradient(to right, rgb(113, 65, 163), rgba(44, 114, 251, 1));
+            color: #ffffff;
             cursor: pointer;
-            -webkit-user-select: none; /* 添加这一行来保证兼容性*/
             user-select: none;
-           
         }
-        
-        .item
-        {
+
+        .item {
             display: flex;
             align-content: center;
             justify-content: space-between;
             width: 80%;
             height: 50px;
-            margin: 8px auto;/*8px 设置了元素顶部和底部的外边距为 8 像素，确保元素与上下其他元素有一定的间距。
-            auto 让浏览器自动计算左右外边距，通常会使元素在其包含块中水平居中。*/
+            margin: 8px auto;
             padding: 16px;
             border-radius: 20px;
             margin-top: 10px;
-            margin-left: 30px; 
+            margin-left: 30px;
             box-sizing: border-box;
-            box-shadow: rgba(149,157,165,0.2)0px 8px 20px;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 20px;
         }
 
-        .del
-        {
+        .del {
             color: red;
+            cursor: pointer;
         }
-        
-        .completed
-        {
+
+        .completed {
             text-decoration: line-through;
-            opacity: 0.4 ;
+            opacity: 0.4;
         }
 
-        .box {
-            width: 100px;
-            height: 100px;
-            background-color: red;
-            margin-top: 10px;
-        }
-
-        .box1 {
-            width: 100px;
-            height: 100px;
-            background-color: blue;
-            margin-top: 10px;
-        }
-
-        img {
-            width: 50%;
-            /* 将图片宽度设置为原来的一半 */
-            height: auto;
-            /* 保持图片的宽高比 */
-            display: block;
-            /* 使图片成为块级元素 */
-            margin: 0 auto;
-            /* 水平居中图片 */
-        }
+       
     </style>
+</head>
+<body>
+    <div id="app" class="todo-app">
+        <div class="title">{{ title }}</div>
+        <div class="todo-form">
+            <input v-model="newTodo" class="todo-input" type="text" placeholder="add a todo">
+            <div class="todo-button" @click="addTodo">add todo</div>
+        </div>
 
+        <div v-for="(todo, index) in todos" :key="index" class="item" :class="{ completed: todo.completed }">
+            <div>
+                <input type="checkbox" v-model="todo.completed">
+                <span class="name">{{ todo.name }}</span>
+            </div>
+            <div class="del" @click="removeTodo(index)">del</div>
+        </div>
 
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                title: 'xxx的Todo App',
+                newTodo: '',
+                todos: [
+                    { name: '吃饭', completed: true },
+                    { name: '吃饭', completed: false },
+                    { name: '吃饭', completed: false }
+                ]
+            },
+            methods: {
+                addTodo() {
+                    if (this.newTodo.trim()) {
+                        this.todos.push({ name: this.newTodo, completed: false });
+                        this.newTodo = '';
+                    }
+                },
+                removeTodo(index) {
+                    this.todos.splice(index, 1);
+                }
+            }
+        });
+    </script>
 </body>
-
 </html>
